@@ -22,6 +22,17 @@ namespace LeftOut.Runtime
             return false;
         }
 
+        public static bool TryAssignNonNull<T>(ref T target, T assignment)
+        {
+            if (assignment == null)
+            {
+                return false;
+            }
+
+            target = assignment;
+            return true;
+        }
+
         public static bool AssureComponentAssigned<T>(this Object parent, ref T fieldToAssign, string fieldName, Func<T> findMethod) where T : UnityEngine.Object
         {
             var nameType = typeof(T).ToString();
@@ -66,6 +77,11 @@ namespace LeftOut.Runtime
             }
 
             return objects[0];
+        }
+
+        public static T WarnIfNull<T>(T nullable)
+        {
+            return WarnIfNull(null, nullable, out _);
         }
 
         public static T WarnIfNull<T>(this Object _, T nullable, out bool referenceIsNull)
