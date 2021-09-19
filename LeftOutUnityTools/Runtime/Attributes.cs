@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using PropertyAttribute = UnityEngine.PropertyAttribute;
 
 namespace LeftOut.Runtime
 {
@@ -9,7 +8,7 @@ namespace LeftOut.Runtime
     {
  
     }
- 
+#if UNITY_EDITOR    
     [CustomPropertyDrawer(typeof(ReadOnlyAttribute))]
     public class ReadOnlyDrawer : PropertyDrawer
     {
@@ -28,7 +27,8 @@ namespace LeftOut.Runtime
             GUI.enabled = true;
         }
     }
- 
+#endif
+
     public class Test
     {
         [ReadOnly] public string a;
