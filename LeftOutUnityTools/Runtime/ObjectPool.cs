@@ -4,7 +4,7 @@ using System.Linq;
 using LeftOut.Runtime.Interfaces;
 using UnityEngine;
 #if UNITY_EDITOR
-using LeftOut.Editor;
+//using LeftOut.Editor;
 #endif
 
 namespace LeftOut.Runtime
@@ -59,22 +59,5 @@ namespace LeftOut.Runtime
             go.SetActive(false);
             m_PoolInactive.Enqueue(go);
         }
-    }
-
-    public class PrefabPool : ObjectPool
-    {
-        public GameObject Prefab => m_Original;
-        
-        public PrefabPool(GameObject prefab) : base(prefab)
-        {
-#if UNITY_EDITOR
-            if (prefab != null && !EditorHelpers.IsAPrefab(prefab))
-            {
-                Debug.LogError($"Can't create a prefab pool from {prefab.name} because it's not a prefab.");
-                m_Original = null;
-            }
-#endif
-        }
-
     }
 }
