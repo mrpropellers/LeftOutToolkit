@@ -1,4 +1,4 @@
-﻿namespace LeftOut.Runtime.Interfaces
+﻿namespace LeftOut
 {
     public interface INeedsInitialization<in T>
     {
