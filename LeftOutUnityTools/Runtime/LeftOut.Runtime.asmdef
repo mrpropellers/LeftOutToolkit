@@ -1,6 +1,6 @@
 {
     "name": "LeftOut.Runtime",
-    "rootNamespace": "",
+    "rootNamespace": "LeftOut",
     "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],
