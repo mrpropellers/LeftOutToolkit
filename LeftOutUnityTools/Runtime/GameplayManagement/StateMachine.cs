@@ -60,6 +60,12 @@ namespace LeftOut.GameplayManagement
         {
             OnReset?.Invoke();
             Current = DefaultState;
+            // TODO? Clear all bindings here
+        }
+
+        public virtual void Initialize()
+        {
+            Reset();
         }
 
         [field: SerializeField]

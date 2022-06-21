@@ -20,6 +20,7 @@ namespace LeftOut.GameplayManagement
         EventChannel m_StartChannel;
 
         public bool TimerHasFinished { get; private set; }
+        [field: SerializeField]
         public float ElapsedTime { get; private set; }
         public bool HasStarted { get; private set; }
         public bool IsRunning { get; private set; }
@@ -33,6 +34,7 @@ namespace LeftOut.GameplayManagement
         {
             base.Awake();
             m_StartChannel.OnEvent.AddListener(HandleStartEvent);
+            ElapsedTime = 0f;
         }
 
         public void StartTimer()

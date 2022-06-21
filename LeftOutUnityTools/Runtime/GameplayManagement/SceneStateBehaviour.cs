@@ -6,20 +6,32 @@ namespace LeftOut.GameplayManagement
     public class SceneStateBehaviour : SingletonBehaviour<SceneStateBehaviour>
     {
         [SerializeField]
-        SceneState m_State;
+        SceneStateMachine m_State;
 
-        public SceneState State
+        public SceneStateMachine State
         {
             get
             {
                 if (m_State == null)
                 {
-                    m_State = ScriptableObject.CreateInstance<SceneState>();
-                    m_State.TryTransitionTo(LevelStateType.NotStarted);
+                    Debug.LogWarning($"No {nameof(SceneStateMachine)} set - creating a blank one.");
+                    m_State = ScriptableObject.CreateInstance<SceneStateMachine>();
                 }
                 return m_State;
             }
-            private set => m_State = value;
+        }
+
+        protected override void Awake()
+        {
+            base.Awake();
+            InitializeState();
+        }
+
+        void InitializeState()
+        {
+            Debug.Log("Initializing Scene state.");
+            m_State.Initialize();
+            m_State.TryTransitionTo(SceneState.NotStarted);
         }
     }
 }
