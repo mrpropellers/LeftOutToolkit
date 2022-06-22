@@ -43,7 +43,6 @@ namespace LeftOut.GameplayManagement
 
         void OnValidate()
         {
-            m_DEBUG_CurrentState = Current;
             if (m_DEBUG_StartLevel)
             {
                 Debug.Log("Transitioning to Level Start...");
@@ -56,6 +55,7 @@ namespace LeftOut.GameplayManagement
                 Reset();
                 m_DEBUG_Reset = false;
             }
+            m_DEBUG_CurrentState = Current;
         }
 
         public override void Initialize()

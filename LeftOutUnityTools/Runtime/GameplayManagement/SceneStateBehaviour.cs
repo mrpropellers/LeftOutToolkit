@@ -21,15 +21,8 @@ namespace LeftOut.GameplayManagement
             }
         }
 
-        protected void Start()
+        void Start()
         {
-            Debug.Log("Initializing Scene State");
-            InitializeState();
-        }
-
-        void InitializeState()
-        {
-            Debug.Log("Initializing Scene state.");
             m_State.Initialize();
         }
     }
