@@ -21,9 +21,9 @@ namespace LeftOut.GameplayManagement
             }
         }
 
-        protected override void Awake()
+        protected void Start()
         {
-            base.Awake();
+            Debug.Log("Initializing Scene State");
             InitializeState();
         }
 
@@ -31,7 +31,6 @@ namespace LeftOut.GameplayManagement
         {
             Debug.Log("Initializing Scene state.");
             m_State.Initialize();
-            m_State.TryTransitionTo(SceneState.NotStarted);
         }
     }
 }

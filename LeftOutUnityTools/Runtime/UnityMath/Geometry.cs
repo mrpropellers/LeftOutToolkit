@@ -4,14 +4,6 @@ using Random = UnityEngine.Random;
 
 namespace LeftOut.UnityMath
 {
-    public static class RandomNumbers
-    {
-        public static float FromNeg1To1()
-        {
-            return Random.Range(-1f, 1f);
-        }
-    }
-
     public static class Geometry
     {
         // https://stackoverflow.com/a/56794499

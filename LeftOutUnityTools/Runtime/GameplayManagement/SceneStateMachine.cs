@@ -66,6 +66,8 @@ namespace LeftOut.GameplayManagement
                 BindSpecificTransition(SceneState.NotStarted, SceneState.Active,
                     () => m_StartLevelChannel.OnEvent?.Invoke());
             }
+
+            Current = SceneState.NotStarted;
         }
 
         public void AutoBind(UnityEngine.Object obj)

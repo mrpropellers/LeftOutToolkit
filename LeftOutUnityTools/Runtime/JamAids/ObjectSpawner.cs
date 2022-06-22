@@ -14,12 +14,22 @@ namespace LeftOut.JamAids
             m_Bounds = GetComponent<BoundsSource>();
         }
 
-        public void SpawnRandomOrientation(Transform parent, GameObject toClone)
+        public GameObject SpawnRandomOrientation(GameObject toClone, Transform parent = null)
         {
             var spawnPoint = m_Bounds.GetRandomPoint();
             var orientation = UnityMath.Geometry.ConstructRandomQuaternion();
             var clone = Object.Instantiate(toClone, parent);
             clone.transform.SetPositionAndRotation(spawnPoint, orientation);
+            return clone;
+        }
+
+        public GameObject SpawnRandomOrientation(ISpawnable spawnable, Transform parent = null)
+        {
+            var spawnPoint = m_Bounds.GetRandomPoint();
+            var orientation = UnityMath.Geometry.ConstructRandomQuaternion();
+            var spawned = spawnable.SpawnOne(parent);
+            spawned.transform.SetPositionAndRotation(spawnPoint, orientation);
+            return spawned.gameObject;
         }
     }
 }
