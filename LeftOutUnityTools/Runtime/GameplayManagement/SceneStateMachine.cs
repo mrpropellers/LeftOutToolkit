@@ -7,9 +7,11 @@ namespace LeftOut.GameplayManagement
     public enum SceneState
     {
         Unknown,
-        NotStarted,
+        Initialized,
+        PreStart,
         Active,
         Paused,
+        PreComplete,
         Complete
     }
 
@@ -63,11 +65,10 @@ namespace LeftOut.GameplayManagement
             Reset();
             if (m_StartLevelChannel != null)
             {
-                BindSpecificTransition(SceneState.NotStarted, SceneState.Active,
-                    () => m_StartLevelChannel.OnEvent?.Invoke());
+                m_StartLevelChannel.OnEvent.AddListener(() => TryTransitionTo(SceneState.Active));
             }
 
-            Current = SceneState.NotStarted;
+            Current = SceneState.Initialized;
         }
 
         public void AutoBind(UnityEngine.Object obj)
@@ -84,7 +85,7 @@ namespace LeftOut.GameplayManagement
             if (obj is IBindToLevelStart bindToLevelStart)
             {
                 Debug.Log($"Binding {obj.name} to level start.");
-                BindSpecificTransition(SceneState.NotStarted, SceneState.Active,
+                BindSpecificTransition(SceneState.Initialized, SceneState.Active,
                     bindToLevelStart.OnLevelStart);
             }
         }

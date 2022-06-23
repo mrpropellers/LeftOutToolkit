@@ -21,5 +21,10 @@ namespace LeftOut
                 m_DEBUG_Invoke = false;
             }
         }
+
+        public void Invoke()
+        {
+            OnEvent?.Invoke();
+        }
     }
 }

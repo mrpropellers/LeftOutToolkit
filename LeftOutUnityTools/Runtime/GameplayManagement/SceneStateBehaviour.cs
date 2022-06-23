@@ -1,10 +1,13 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Events;
 
 namespace LeftOut.GameplayManagement
 {
     // TODO? Maybe this shouldn't be a Singleton
     public class SceneStateBehaviour : SingletonBehaviour<SceneStateBehaviour>
     {
+
         [SerializeField]
         SceneStateMachine m_State;
 

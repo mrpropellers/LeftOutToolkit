@@ -1,7 +1,10 @@
 ﻿using System;
+using LeftOut.Channels;
+using NUnit.Framework;
 using UnityEngine;
-using UnityEngine.Assertions;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
+using Assert = UnityEngine.Assertions.Assert;
 
 namespace LeftOut.GameplayManagement
 {
@@ -19,9 +22,18 @@ namespace LeftOut.GameplayManagement
         [SerializeField]
         EventChannel m_StartChannel;
 
+        [FormerlySerializedAs("m_ElapsedTimeChannel")]
+        [SerializeField]
+        FloatChannel m_TimeLeftChannel;
+
+
         public bool TimerHasFinished { get; private set; }
-        [field: SerializeField]
-        public float ElapsedTime { get; private set; }
+        public float ElapsedTime
+        {
+            get => (m_CompletionTime - m_TimeLeftChannel.Value);
+            private set => m_TimeLeftChannel.Value = (m_CompletionTime - value);
+        }
+
         public bool HasStarted { get; private set; }
         public bool IsRunning { get; private set; }
         public bool CanBeStarted => !HasStarted && !(TimerHasFinished || IsRunning);
@@ -30,11 +42,18 @@ namespace LeftOut.GameplayManagement
 
         public MonoBehaviour DeactivateThisOnPause => this;
 
-        protected override void Awake()
+        protected void Start()
         {
-            base.Awake();
             m_StartChannel.OnEvent.AddListener(HandleStartEvent);
+            Reset();
+        }
+
+        public void Reset()
+        {
             ElapsedTime = 0f;
+            IsRunning = false;
+            HasStarted = false;
+            TimerHasFinished = false;
         }
 
         public void StartTimer()
