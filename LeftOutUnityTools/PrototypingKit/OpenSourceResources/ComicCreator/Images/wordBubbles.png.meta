@@ -117,6 +117,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -856,6 +857,38 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      wordBubbles_20: 21300030
+      wordBubbles_4: 21300006
+      wordBubbles_15: 21300022
+      wordBubbles_24: 21300036
+      wordBubbles_31: 21300046
+      wordBubbles_7: 21300012
+      wordBubbles_21: 21300032
+      wordBubbles_41: 21300060
+      wordBubbles_32: 21300048
+      wordBubbles_16: 21300024
+      wordBubbles_30: 21300044
+      wordBubbles_5: 21300008
+      wordBubbles_36: 21300054
+      wordBubbles_35: 21300052
+      wordBubbles_18: 21300028
+      wordBubbles_39: 21300056
+      wordBubbles_10: 21300016
+      wordBubbles_2: 21300004
+      wordBubbles_23: 21300034
+      wordBubbles_0: 21300000
+      wordBubbles_34: 21300050
+      wordBubbles_14: 21300020
+      wordBubbles_9: 21300014
+      wordBubbles_6: 21300010
+      wordBubbles_28: 21300042
+      wordBubbles_17: 21300026
+      wordBubbles_40: 21300058
+      wordBubbles_11: 21300018
+      wordBubbles_1: 21300002
+      wordBubbles_25: 21300038
+      wordBubbles_27: 21300040
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

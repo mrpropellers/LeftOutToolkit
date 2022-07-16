@@ -1,6 +1,5 @@
 ﻿using System;
 using LeftOut.Channels;
-using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Serialization;
