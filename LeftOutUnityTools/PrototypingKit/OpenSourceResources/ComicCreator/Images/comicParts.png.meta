@@ -96,6 +96,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -436,6 +437,19 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      speechBubble01: 21300026
+      speechBubbleArrowShort: 21300044
+      speechBubbleConnectorLong: 21300038
+      speechBubbleInside01: 21300034
+      speechBubble02: 21300028
+      comicFrameVertical: 21300046
+      speechBubbleInside00: 21300032
+      speechBubbleInside02: 21300036
+      speechBubble00: 21300024
+      speechBubbleArrowLong: 21300042
+      comicFrameHorizontal: 21300030
+      speechBubbleConnectorShort: 21300040
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
