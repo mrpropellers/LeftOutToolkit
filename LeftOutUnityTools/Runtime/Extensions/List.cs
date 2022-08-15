@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEditor.Search;
 using Random = UnityEngine.Random;
 
 namespace LeftOut.Extensions
@@ -21,6 +22,19 @@ namespace LeftOut.Extensions
                 var k = Random.Range(0, n + 1);
                 (self[k], self[n]) = (self[n], self[k]);
             }
+        }
+
+        public static List<T> PruneNull<T>(this List<T> self) where T : class
+        {
+            for (var i = self.Count; i >= 0; --i)
+            {
+                if (self[i] == null)
+                {
+                    self.RemoveAt(i);
+                }
+            }
+
+            return self;
         }
     }
 }
