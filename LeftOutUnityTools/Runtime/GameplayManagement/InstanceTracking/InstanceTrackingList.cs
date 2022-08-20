@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -8,21 +9,41 @@ namespace LeftOut
 {
     public static class InstanceTrackingList<T> where T : class, ITrackableInstance
     {
-        static List<T> s_Instances;
+        public enum ListChangeEventType
+        {
+            Added,
+            Removed
+        }
 
+        public class TrackingChangeEventArgs : EventArgs
+        {
+            public ListChangeEventType ChangeEventType { get; }
+            public T InstanceAffected { get; }
+
+            internal TrackingChangeEventArgs(ListChangeEventType eventType, T instance)
+            {
+                ChangeEventType = eventType;
+                InstanceAffected = instance;
+            }
+        }
+        
+        static List<T> s_Instances;
         // Ensure the list of instances is initialized before returning
         static List<T> InstancesInitialized => s_Instances ??= new List<T>();
 
-        static void Register(T instance)
+        public static event EventHandler<TrackingChangeEventArgs> OnChange;
+
+        public static void Add(T instance)
         {
             if (InstancesInitialized.Contains(instance))
             {
-                Debug.LogWarning($"Can't {nameof(Register)} {instance} because it is already being tracked.");
+                Debug.LogWarning($"Can't {nameof(Add)} {instance} because it is already being tracked.");
                 return;
             }
 
             s_Instances.Add(instance);
             instance.OnDestroyed += HandleInstanceDestroyed;
+            OnChange?.Invoke(null, new TrackingChangeEventArgs(ListChangeEventType.Added, instance));
         }
 
         static void HandleInstanceDestroyed(ITrackableInstance instance)
@@ -32,6 +53,7 @@ namespace LeftOut
             Debug.Assert(s_Instances.Contains(instance),
                 $"Trying to handle destruction of {instance}, which we weren't tracking in {s_Instances}");
             s_Instances.Remove((T)instance);
+            OnChange?.Invoke(null, new TrackingChangeEventArgs(ListChangeEventType.Removed, (T)instance));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -42,16 +64,15 @@ namespace LeftOut
                 $"did we not properly clean up after a destroy?");
         }
 
-        static List<T> GetAll()
+        public static List<T> GetReference()
         {
-            AssertOnNull();
-            return s_Instances;
+            return InstancesInitialized;
         }
         
         static bool TryGetFirst(out T instance)
         {
             AssertOnNull();
-            if (InstancesInitialized.Any())
+            if (s_Instances.Any())
             {
                 instance = s_Instances[0];
                 return true;
