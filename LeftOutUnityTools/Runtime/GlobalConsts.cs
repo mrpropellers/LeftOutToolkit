@@ -1,4 +1,6 @@
-﻿namespace LeftOut.GlobalConsts
+﻿using UnityEngine;
+
+namespace LeftOut.GlobalConsts
 {
     public static class ShaderProperty
     {
@@ -16,5 +18,10 @@
         public const string MainCamera = "MainCamera";
         public const string Player = "Player";
         public const string GameController = "GameController";
+    }
+
+    public static class AnimatorParameters
+    {
+        public static int NumLoopsCurrentState = Animator.StringToHash("NumLoopsCurrentState");
     }
 }
