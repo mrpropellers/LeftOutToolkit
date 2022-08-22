@@ -23,5 +23,7 @@ namespace LeftOut.GlobalConsts
     public static class AnimatorParameters
     {
         public static int NumLoopsCurrentState = Animator.StringToHash("NumLoopsCurrentState");
+        public static int HurtboxActive = Animator.StringToHash("HurtboxActive");
+        public static int StartHurtboxWindup = Animator.StringToHash("WindUpHurtbox");
     }
 }

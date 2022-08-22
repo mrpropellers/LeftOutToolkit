@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityEditor.Search;
 using Random = UnityEngine.Random;
 
 namespace LeftOut.Extensions
