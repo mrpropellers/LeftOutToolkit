@@ -23,6 +23,13 @@ namespace LeftOut.Extensions
             }
         }
 
+        public static List<T> GetShuffledCopy<T>(this List<T> self)
+        {
+            var copy = new List<T>(self);
+            copy.Shuffle();
+            return copy;
+        }
+
         public static List<T> PruneNull<T>(this List<T> self) where T : class
         {
             for (var i = self.Count; i >= 0; --i)
