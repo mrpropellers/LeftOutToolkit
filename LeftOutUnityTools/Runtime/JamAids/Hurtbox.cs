@@ -64,7 +64,7 @@ namespace LeftOut
 
         public void Deactivate()
         {
-            Debug.Assert(m_IsWindingUp || m_IsOn);
+            //Debug.Assert(m_IsWindingUp || m_IsOn);
             IsOn = false;
         }
 
