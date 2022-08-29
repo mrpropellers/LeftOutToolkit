@@ -9,12 +9,12 @@ namespace LeftOut
     public class ColorSetter : MonoBehaviour
     {
         Color m_LastColorSet;
-        
+
         public Color ColorToUse;
         [FormerlySerializedAs("Targets")]
         public List<SpriteRenderer> SpriteTargets;
         public List<MeshRenderer> MeshTargets;
-        
+
         // Start is called before the first frame update
         void Start()
         {
@@ -32,7 +32,7 @@ namespace LeftOut
 
         void OnValidate()
         {
-            ApplyColor();
+            //ApplyColor();
         }
 
         void ApplyColor()

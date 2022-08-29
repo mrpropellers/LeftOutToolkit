@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using DG.Tweening;
+using UnityEngine;
 
 namespace LeftOut
 {
@@ -6,6 +7,7 @@ namespace LeftOut
     {
         Collider2D[] m_AllColliders;
         bool[] m_OriginalColliderStates;
+        Quaternion m_LastRotation;
 
         public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
@@ -16,22 +18,18 @@ namespace LeftOut
                 m_OriginalColliderStates[i] = m_AllColliders[i].enabled;
                 m_AllColliders[i].enabled = false;
             }
+
+            animator.transform.DOBlendableRotateBy(Vector3.up * 180f, stateInfo.length).SetEase(Ease.InOutQuad);
         }
 
         public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            var tf = animator.transform;
-            tf.localScale = new Vector3(tf.localScale.x * -1, tf.localScale.y, tf.localScale.z);
             for (var i = 0; i < m_AllColliders.Length; ++i)
             {
                 m_AllColliders[i].enabled = m_OriginalColliderStates[i];
             }
+
+            animator.transform.DOComplete();
         }
-
-        public override void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) { }
-
-        public override void OnStateMove(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) { }
-
-        public override void OnStateIK(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) { }
     }
 }

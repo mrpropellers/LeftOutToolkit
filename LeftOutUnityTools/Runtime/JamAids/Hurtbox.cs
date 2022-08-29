@@ -10,7 +10,8 @@ namespace LeftOut
     {
         bool m_IsWindingUp;
         bool m_IsOn;
-        Animator m_Animator;
+        [SerializeField]
+        List<Animator> m_Animators;
         List<Damageable> m_DamageReceivers;
 
         [field: SerializeField]
@@ -25,8 +26,12 @@ namespace LeftOut
             {
                 // Whenever IsOn toggles, IsWindingUp must reset
                 m_IsWindingUp = false;
-                m_Animator ??= GetComponent<Animator>();
-                m_Animator?.SetBool(GlobalConsts.AnimatorParameters.HurtboxActive, value);
+                foreach (var animator in m_Animators)
+                {
+                    if (animator == null)
+                        continue;
+                    animator.SetBool(GlobalConsts.AnimatorParameters.HurtboxActive, value);
+                }
                 m_IsOn = value;
             }
         }
@@ -49,13 +54,21 @@ namespace LeftOut
             m_DamageReceivers.Clear();
         }
 
+        void OnValidate()
+        {
+            if (!TryGetComponent<Rigidbody>(out _) && !TryGetComponent<Rigidbody2D>(out _))
+            {
+                Debug.LogWarning($"No rigidbody attached - may not be able to detect collisions");
+            }
+        }
+
         public void Activate(float windupTime = 0f)
         {
             m_DamageReceivers.Clear();
             Debug.Assert(!m_IsWindingUp && !m_IsOn, "Can't call Activate when already active");
-            if (m_Animator != null || TryGetComponent(out m_Animator))
+            foreach (var animator in m_Animators)
             {
-                m_Animator.SetTrigger(GlobalConsts.AnimatorParameters.StartHurtboxWindup);
+                animator.SetTrigger(GlobalConsts.AnimatorParameters.StartHurtboxWindup);
             }
 
             m_IsWindingUp = true;
