@@ -9,7 +9,7 @@ namespace LeftOut.JamAids
     {
         TextMeshProUGUI m_GUI;
 
-        protected virtual void Start()
+        protected virtual void Awake()
         {
             m_GUI = GetComponent<TextMeshProUGUI>();
         }
