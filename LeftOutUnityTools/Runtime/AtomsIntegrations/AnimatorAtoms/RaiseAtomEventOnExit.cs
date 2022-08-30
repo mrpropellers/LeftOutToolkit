@@ -1,7 +1,7 @@
 ﻿using UnityAtoms.BaseAtoms;
 using UnityEngine;
 
-namespace AtomsIntegrations.AnimatorAtoms
+namespace LeftOut.AtomsIntegrations.AnimatorAtoms
 {
     public class RaiseAtomEventOnExit : StateMachineBehaviour
     {

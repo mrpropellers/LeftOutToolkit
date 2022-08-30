@@ -18,6 +18,8 @@ namespace LeftOut.GlobalConsts
         public const string MainCamera = "MainCamera";
         public const string Player = "Player";
         public const string GameController = "GameController";
+        public const string FrontAim = "FrontAim";
+        public const string RearAim = "RearAim";
     }
 
     public static class AnimatorParameters
