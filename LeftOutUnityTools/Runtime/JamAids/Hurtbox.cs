@@ -8,10 +8,6 @@ namespace LeftOut
 {
     public class Hurtbox : MonoBehaviour, IHaveOwner
     {
-        bool m_IsWindingUp;
-        bool m_IsOn;
-        [SerializeField]
-        List<Animator> m_Animators;
         List<Damageable> m_DamageReceivers;
 
         [field: SerializeField]
@@ -19,22 +15,7 @@ namespace LeftOut
         [SerializeField]
         int DamageAmount = 1;
 
-        bool IsOn
-        {
-            get => m_IsOn;
-            set
-            {
-                // Whenever IsOn toggles, IsWindingUp must reset
-                m_IsWindingUp = false;
-                foreach (var animator in m_Animators)
-                {
-                    if (animator == null)
-                        continue;
-                    animator.SetBool(GlobalConsts.AnimatorParameters.HurtboxActive, value);
-                }
-                m_IsOn = value;
-            }
-        }
+        bool IsOn { get; set; }
 
         void Start()
         {
@@ -43,7 +24,7 @@ namespace LeftOut
 
         void LateUpdate()
         {
-            if (!m_IsOn) return;
+            if (!IsOn) return;
 
             // We only want to assign damage to any given receiver once per frame, even if we've had many collisions
             foreach (var damageable in m_DamageReceivers)
@@ -54,44 +35,16 @@ namespace LeftOut
             m_DamageReceivers.Clear();
         }
 
-        void OnValidate()
-        {
-            if (!TryGetComponent<Rigidbody>(out _) && !TryGetComponent<Rigidbody2D>(out _))
-            {
-                Debug.LogWarning($"No rigidbody attached - may not be able to detect collisions");
-            }
-        }
-
-        public void Activate(float windupTime = 0f)
+        public void Activate()
         {
             m_DamageReceivers.Clear();
-            Debug.Assert(!m_IsWindingUp && !m_IsOn, "Can't call Activate when already active");
-            foreach (var animator in m_Animators)
-            {
-                animator.SetTrigger(GlobalConsts.AnimatorParameters.StartHurtboxWindup);
-            }
-
-            m_IsWindingUp = true;
-            StartCoroutine(ActivateAfter(windupTime));
+            IsOn = true;
         }
 
         public void Deactivate()
         {
             //Debug.Assert(m_IsWindingUp || m_IsOn);
             IsOn = false;
-        }
-
-        IEnumerator ActivateAfter(float seconds)
-        {
-            yield return new WaitForSeconds(seconds);
-            if (m_IsWindingUp)
-            {
-                IsOn = true;
-            }
-            else
-            {
-                Debug.LogWarning("Windup killed during wind up period - did not activate.");
-            }
         }
 
         void AssignDamage(Damageable target)
