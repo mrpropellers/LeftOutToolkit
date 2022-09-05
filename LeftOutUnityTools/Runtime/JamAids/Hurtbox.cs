@@ -1,14 +1,17 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using LeftOut.Interfaces;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace LeftOut
 {
     public class Hurtbox : MonoBehaviour, IHaveOwner
     {
-        List<Damageable> m_DamageReceivers;
+        List<IDamageable> m_DamageReceivers;
+        DamageAttempt m_DamageAttempt;
+
+        public event EventHandler<DamageResult> OnDamageProcessed;
 
         [field: SerializeField]
         public GameObject Owner { get; internal set; }
@@ -19,7 +22,8 @@ namespace LeftOut
 
         void Start()
         {
-            m_DamageReceivers = new List<Damageable>();
+            m_DamageReceivers = new List<IDamageable>();
+            m_DamageAttempt = new DamageAttempt(Owner, DamageAmount);
         }
 
         void LateUpdate()
@@ -29,10 +33,19 @@ namespace LeftOut
             // We only want to assign damage to any given receiver once per frame, even if we've had many collisions
             foreach (var damageable in m_DamageReceivers)
             {
-                damageable.ReceiveDamage(gameObject, DamageAmount);
+                var result = damageable.ProcessDamage(m_DamageAttempt);
+                if (result.AttemptWasProcessed)
+                {
+                    OnDamageProcessed?.Invoke(this, result);
+                }
             }
 
             m_DamageReceivers.Clear();
+        }
+
+        void OnValidate()
+        {
+            m_DamageAttempt = new DamageAttempt(Owner, DamageAmount);
         }
 
         public void Activate()
@@ -47,7 +60,7 @@ namespace LeftOut
             IsOn = false;
         }
 
-        void AssignDamage(Damageable target)
+        void AssignDamage(DamagePasserOncePerFrame target)
         {
             if (!IsOn || !isActiveAndEnabled || m_DamageReceivers.Contains(target))
                 return;
@@ -56,7 +69,7 @@ namespace LeftOut
 
         void OnCollisionEnter(Collision collision)
         {
-            if (collision.collider.TryGetComponent(out Damageable damageable))
+            if (collision.collider.TryGetComponent(out DamagePasserOncePerFrame damageable))
             {
                 AssignDamage(damageable);
             }
@@ -64,7 +77,7 @@ namespace LeftOut
 
         void OnCollisionStay(Collision collisionInfo)
         {
-            if (collisionInfo.collider.TryGetComponent(out Damageable damageable))
+            if (collisionInfo.collider.TryGetComponent(out DamagePasserOncePerFrame damageable))
             {
                 AssignDamage(damageable);
             }
@@ -72,7 +85,7 @@ namespace LeftOut
 
         void OnTriggerEnter(Collider other)
         {
-            if (other.TryGetComponent(out Damageable damageable))
+            if (other.TryGetComponent(out DamagePasserOncePerFrame damageable))
             {
                 AssignDamage(damageable);
             }
@@ -80,7 +93,7 @@ namespace LeftOut
 
         void OnTriggerStay(Collider other)
         {
-            if (other.TryGetComponent(out Damageable damageable))
+            if (other.TryGetComponent(out DamagePasserOncePerFrame damageable))
             {
                 AssignDamage(damageable);
             }
@@ -88,7 +101,7 @@ namespace LeftOut
 
         void OnCollisionEnter2D(Collision2D col)
         {
-            if (col.collider.TryGetComponent(out Damageable damageable))
+            if (col.collider.TryGetComponent(out DamagePasserOncePerFrame damageable))
             {
                 AssignDamage(damageable);
             }
@@ -96,7 +109,7 @@ namespace LeftOut
 
         void OnCollisionStay2D(Collision2D collision)
         {
-            if (collision.collider.TryGetComponent(out Damageable damageable))
+            if (collision.collider.TryGetComponent(out DamagePasserOncePerFrame damageable))
             {
                 AssignDamage(damageable);
             }
@@ -104,7 +117,7 @@ namespace LeftOut
 
         void OnTriggerEnter2D(Collider2D col)
         {
-            if (col.TryGetComponent(out Damageable damageable))
+            if (col.TryGetComponent(out DamagePasserOncePerFrame damageable))
             {
                 AssignDamage(damageable);
             }
@@ -112,7 +125,7 @@ namespace LeftOut
 
         void OnTriggerStay2D(Collider2D other)
         {
-            if (other.TryGetComponent(out Damageable damageable))
+            if (other.TryGetComponent(out DamagePasserOncePerFrame damageable))
             {
                 AssignDamage(damageable);
             }
