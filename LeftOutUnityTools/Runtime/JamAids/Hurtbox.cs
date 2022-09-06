@@ -20,7 +20,7 @@ namespace LeftOut
 
         bool IsOn { get; set; }
 
-        void Start()
+        void Awake()
         {
             m_DamageReceivers = new List<IDamageable>();
             m_DamageAttempt = new DamageAttempt(Owner, DamageAmount);
@@ -60,7 +60,7 @@ namespace LeftOut
             IsOn = false;
         }
 
-        void AssignDamage(DamagePasserOncePerFrame target)
+        void AssignDamage(IDamageable target)
         {
             if (!IsOn || !isActiveAndEnabled || m_DamageReceivers.Contains(target))
                 return;
@@ -69,7 +69,7 @@ namespace LeftOut
 
         void OnCollisionEnter(Collision collision)
         {
-            if (collision.collider.TryGetComponent(out DamagePasserOncePerFrame damageable))
+            if (collision.collider.TryGetComponent(out IDamageable damageable))
             {
                 AssignDamage(damageable);
             }
@@ -77,7 +77,7 @@ namespace LeftOut
 
         void OnCollisionStay(Collision collisionInfo)
         {
-            if (collisionInfo.collider.TryGetComponent(out DamagePasserOncePerFrame damageable))
+            if (collisionInfo.collider.TryGetComponent(out IDamageable damageable))
             {
                 AssignDamage(damageable);
             }
@@ -85,7 +85,7 @@ namespace LeftOut
 
         void OnTriggerEnter(Collider other)
         {
-            if (other.TryGetComponent(out DamagePasserOncePerFrame damageable))
+            if (other.TryGetComponent(out IDamageable damageable))
             {
                 AssignDamage(damageable);
             }
@@ -93,7 +93,7 @@ namespace LeftOut
 
         void OnTriggerStay(Collider other)
         {
-            if (other.TryGetComponent(out DamagePasserOncePerFrame damageable))
+            if (other.TryGetComponent(out IDamageable damageable))
             {
                 AssignDamage(damageable);
             }
@@ -101,7 +101,7 @@ namespace LeftOut
 
         void OnCollisionEnter2D(Collision2D col)
         {
-            if (col.collider.TryGetComponent(out DamagePasserOncePerFrame damageable))
+            if (col.collider.TryGetComponent(out IDamageable damageable))
             {
                 AssignDamage(damageable);
             }
@@ -109,7 +109,7 @@ namespace LeftOut
 
         void OnCollisionStay2D(Collision2D collision)
         {
-            if (collision.collider.TryGetComponent(out DamagePasserOncePerFrame damageable))
+            if (collision.collider.TryGetComponent(out IDamageable damageable))
             {
                 AssignDamage(damageable);
             }
@@ -117,7 +117,7 @@ namespace LeftOut
 
         void OnTriggerEnter2D(Collider2D col)
         {
-            if (col.TryGetComponent(out DamagePasserOncePerFrame damageable))
+            if (col.TryGetComponent(out IDamageable damageable))
             {
                 AssignDamage(damageable);
             }
@@ -125,7 +125,7 @@ namespace LeftOut
 
         void OnTriggerStay2D(Collider2D other)
         {
-            if (other.TryGetComponent(out DamagePasserOncePerFrame damageable))
+            if (other.TryGetComponent(out IDamageable damageable))
             {
                 AssignDamage(damageable);
             }
