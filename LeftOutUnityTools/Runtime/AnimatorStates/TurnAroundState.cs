@@ -11,23 +11,23 @@ namespace LeftOut
 
         public override void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            m_AllColliders = animator.gameObject.GetComponentsInChildren<Collider2D>();
-            m_OriginalColliderStates = new bool[m_AllColliders.Length];
-            for (var i = 0; i < m_AllColliders.Length; ++i)
-            {
-                m_OriginalColliderStates[i] = m_AllColliders[i].enabled;
-                m_AllColliders[i].enabled = false;
-            }
+            // m_AllColliders = animator.gameObject.GetComponentsInChildren<Collider2D>();
+            // m_OriginalColliderStates = new bool[m_AllColliders.Length];
+            // for (var i = 0; i < m_AllColliders.Length; ++i)
+            // {
+            //     m_OriginalColliderStates[i] = m_AllColliders[i].enabled;
+            //     m_AllColliders[i].enabled = false;
+            // }
 
             animator.transform.DOBlendableRotateBy(Vector3.up * 180f, stateInfo.length).SetEase(Ease.InOutQuad);
         }
 
         public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            for (var i = 0; i < m_AllColliders.Length; ++i)
-            {
-                m_AllColliders[i].enabled = m_OriginalColliderStates[i];
-            }
+            // for (var i = 0; i < m_AllColliders.Length; ++i)
+            // {
+            //     m_AllColliders[i].enabled = m_OriginalColliderStates[i];
+            // }
 
             animator.transform.DOComplete();
         }

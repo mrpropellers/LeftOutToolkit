@@ -1,16 +1,34 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 namespace LeftOut
 {
     public class DamageAttempt : System.EventArgs
     {
+        float m_RawDamage;
+
         public GameObject Source { get; }
-        public float DamageAmount { get; }
+        public List<float> Multipliers { get; }
+
+        public float FinalDamageAmount
+        {
+            get
+            {
+                var finalDamage =
+                    Multipliers.Aggregate(m_RawDamage, (current, factor) => current * factor);
+                // TODO: This is bad practice. What's a better way to ensure Multipliers don't persist
+                //       between damage attempts?
+                Multipliers.Clear();
+                return finalDamage;
+            }
+        }
 
         public DamageAttempt(GameObject source, float damageAmount)
         {
             Source = source;
-            DamageAmount = damageAmount;
+            m_RawDamage = damageAmount;
+            Multipliers = new List<float>();
         }
     }
 
@@ -20,15 +38,18 @@ namespace LeftOut
         public bool AttemptWasProcessed { get; private set; }
         public int AmountApplied;
 
-        public static DamageResult Ignored => new DamageResult(int.MinValue)
+        public static DamageResult Ignored = new DamageResult();
+
+        DamageResult()
         {
-            AttemptWasProcessed = true,
-        };
+            AmountApplied = int.MinValue;
+            AttemptWasProcessed = false;
+        }
 
         public DamageResult(int amountApplied)
         {
             AttemptWasProcessed = true;
-            Debug.Assert(amountApplied >= 0f);
+            Debug.Assert(amountApplied >= 0);
             AmountApplied = amountApplied;
         }
     }

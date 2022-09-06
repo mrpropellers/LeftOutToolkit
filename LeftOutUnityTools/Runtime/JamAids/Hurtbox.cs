@@ -8,31 +8,31 @@ namespace LeftOut
 {
     public class Hurtbox : MonoBehaviour, IHaveOwner
     {
-        List<IDamageable> m_DamageReceivers;
+        Dictionary<GameObject,IDamageable> m_DamageReceivers;
         DamageAttempt m_DamageAttempt;
 
         public event EventHandler<DamageResult> OnDamageProcessed;
 
         [field: SerializeField]
         public GameObject Owner { get; internal set; }
-        [SerializeField]
-        int DamageAmount = 1;
+        public float DamageAmount = 1f;
 
         bool IsOn { get; set; }
 
         void Awake()
         {
-            m_DamageReceivers = new List<IDamageable>();
+            m_DamageReceivers = new Dictionary<GameObject, IDamageable>();
             m_DamageAttempt = new DamageAttempt(Owner, DamageAmount);
         }
 
         void LateUpdate()
         {
-            if (!IsOn) return;
+            //if (!IsOn) return;
 
             // We only want to assign damage to any given receiver once per frame, even if we've had many collisions
-            foreach (var damageable in m_DamageReceivers)
+            foreach (var damageable in m_DamageReceivers.Values)
             {
+                if (!IsOn) break;
                 var result = damageable.ProcessDamage(m_DamageAttempt);
                 if (result.AttemptWasProcessed)
                 {
@@ -58,77 +58,63 @@ namespace LeftOut
         {
             //Debug.Assert(m_IsWindingUp || m_IsOn);
             IsOn = false;
+            //m_DamageReceivers.Clear();
         }
 
-        void AssignDamage(IDamageable target)
+        bool AlreadyDamagingThisFrame(Collider col, Rigidbody rb) =>
+            m_DamageReceivers.ContainsKey(col.gameObject)
+                || rb != null && m_DamageReceivers.ContainsKey(rb.gameObject);
+
+        bool AlreadyDamagingThisFrame(Collider2D col, Rigidbody2D rb) =>
+            m_DamageReceivers.ContainsKey(col.gameObject)
+                || rb != null && m_DamageReceivers.ContainsKey(rb.gameObject);
+
+        void AssignDamage(IDamageable damageable)
         {
-            if (!IsOn || !isActiveAndEnabled || m_DamageReceivers.Contains(target))
+            var target = ((Component)damageable).gameObject;
+            Debug.Assert(!m_DamageReceivers.ContainsKey(target),
+                "Don't call AssignDamage on objects that will already be damaged this frame");
+            if (!IsOn || !isActiveAndEnabled || m_DamageReceivers.ContainsKey(target))
                 return;
-            m_DamageReceivers.Add(target);
+            m_DamageReceivers.Add(target, damageable);
         }
 
-        void OnCollisionEnter(Collision collision)
+        void AssignDamageIfDamageable(Collider col)
         {
-            if (collision.collider.TryGetComponent(out IDamageable damageable))
+            var rb = col.attachedRigidbody;
+            if (AlreadyDamagingThisFrame(col, rb)) return;
+            if (col.TryGetComponent(out IDamageable damageable)
+                || rb != null && col.attachedRigidbody.TryGetComponent(out damageable))
             {
                 AssignDamage(damageable);
             }
         }
 
-        void OnCollisionStay(Collision collisionInfo)
+        void AssignDamageIfDamageable(Collider2D col)
         {
-            if (collisionInfo.collider.TryGetComponent(out IDamageable damageable))
+            var rb = col.attachedRigidbody;
+            if (AlreadyDamagingThisFrame(col, rb)) return;
+            if (col.TryGetComponent(out IDamageable damageable)
+                || rb != null && col.attachedRigidbody.TryGetComponent(out damageable))
             {
                 AssignDamage(damageable);
             }
         }
 
-        void OnTriggerEnter(Collider other)
-        {
-            if (other.TryGetComponent(out IDamageable damageable))
-            {
-                AssignDamage(damageable);
-            }
-        }
+        void OnCollisionEnter(Collision collision) => AssignDamageIfDamageable(collision.collider);
 
-        void OnTriggerStay(Collider other)
-        {
-            if (other.TryGetComponent(out IDamageable damageable))
-            {
-                AssignDamage(damageable);
-            }
-        }
+        void OnCollisionStay(Collision collisionInfo) => AssignDamageIfDamageable(collisionInfo.collider);
 
-        void OnCollisionEnter2D(Collision2D col)
-        {
-            if (col.collider.TryGetComponent(out IDamageable damageable))
-            {
-                AssignDamage(damageable);
-            }
-        }
+        void OnTriggerEnter(Collider other) => AssignDamageIfDamageable(other);
 
-        void OnCollisionStay2D(Collision2D collision)
-        {
-            if (collision.collider.TryGetComponent(out IDamageable damageable))
-            {
-                AssignDamage(damageable);
-            }
-        }
+        void OnTriggerStay(Collider other) => AssignDamageIfDamageable(other);
 
-        void OnTriggerEnter2D(Collider2D col)
-        {
-            if (col.TryGetComponent(out IDamageable damageable))
-            {
-                AssignDamage(damageable);
-            }
-        }
+        void OnCollisionEnter2D(Collision2D col) => AssignDamageIfDamageable(col.collider);
 
-        void OnTriggerStay2D(Collider2D other)
-        {
-            if (other.TryGetComponent(out IDamageable damageable))
-            {
-                AssignDamage(damageable);
-            }
-        }
+        void OnCollisionStay2D(Collision2D collision) => AssignDamageIfDamageable(collision.collider);
+
+        void OnTriggerEnter2D(Collider2D col) => AssignDamageIfDamageable(col);
+
+        void OnTriggerStay2D(Collider2D other) => AssignDamageIfDamageable(other);
     }
 }

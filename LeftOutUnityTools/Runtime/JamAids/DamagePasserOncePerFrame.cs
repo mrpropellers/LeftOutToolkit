@@ -19,9 +19,10 @@ namespace LeftOut
         {
             if (m_LastFrameDamaged == Time.frameCount || OnDamageAttempt == null)
             {
+                var sourceName = attempt.Source == null ? "null" : attempt.Source.name;
                 Debug.Log(
                     $"Already received damage from a source this frame, " +
-                    $"ignoring damage from {attempt.Source.name}");
+                    $"ignoring damage from {sourceName}");
                 return DamageResult.Ignored;
             }
 
