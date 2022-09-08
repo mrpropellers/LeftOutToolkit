@@ -17,7 +17,7 @@ namespace LeftOut
         public GameObject Owner { get; internal set; }
         public float DamageAmount = 1f;
 
-        bool IsOn { get; set; }
+        public bool IsOn { get; private set; }
 
         void Awake()
         {

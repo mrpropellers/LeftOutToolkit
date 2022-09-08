@@ -3,10 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityAtoms.BaseAtoms;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace LeftOut.Atoms
 {
-    [RequireComponent(typeof(AudioSource))]
     public class AudioVoidEventBinding : MonoBehaviour
     {
         [System.Serializable]
@@ -14,12 +14,15 @@ namespace LeftOut.Atoms
         {
             int ClipIndex = 0;
             public VoidEvent Event;
+            public AudioSource AudioSource;
             public AudioClip[] AudioClips;
-            [Range(0f, 1f)]
+            [Range(0f, 2f)]
             public float BaseVolume = 1f;
             [Range(0f, 0.5f)]
             public float VolumeVariance;
-            [Range(0f, 1.0f)]
+            [Range(0f, 4f)]
+            public float BasePitch = 1f;
+            [Range(0f, 2.0f)]
             public float PitchVariance;
 
             public AudioClip NextClip
@@ -37,8 +40,6 @@ namespace LeftOut.Atoms
                 }
             }
         }
-
-        AudioSource m_AudioSource;
 
         [SerializeField]
         EventClipBinding[] m_Bindings;
@@ -61,14 +62,16 @@ namespace LeftOut.Atoms
                 Debug.LogWarning($"Only added {numAdded} of {m_Bindings.Length} bindings", this);
             }
 
-            m_AudioSource = GetComponent<AudioSource>();
         }
 
         void PlayClip(int bindingIndex)
         {
             var binding = m_Bindings[bindingIndex];
             // >>> TODO: Handle pitch/volume variance
-            m_AudioSource.PlayOneShot(binding.NextClip, binding.BaseVolume);
+            binding.AudioSource.pitch =
+                binding.BasePitch + Random.Range(-binding.PitchVariance, binding.PitchVariance);
+            binding.AudioSource.PlayOneShot(binding.NextClip,
+                binding.BaseVolume + Random.Range(-binding.VolumeVariance, binding.VolumeVariance));
         }
     }
 }
