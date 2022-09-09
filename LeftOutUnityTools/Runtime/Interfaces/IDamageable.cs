@@ -7,28 +7,43 @@ namespace LeftOut
     public class DamageAttempt : System.EventArgs
     {
         float m_RawDamage;
+        int m_FrameHitboxSet;
+        int m_FrameHurtboxSet;
 
         public GameObject Source { get; }
-        public List<float> Multipliers { get; }
+        public float HitboxMultiplier { get; private set; } = 1f;
+        public float HurtboxMultiplier { get; private set; } = 1f;
 
-        public float FinalDamageAmount
-        {
-            get
-            {
-                var finalDamage =
-                    Multipliers.Aggregate(m_RawDamage, (current, factor) => current * factor);
-                // TODO: This is bad practice. What's a better way to ensure Multipliers don't persist
-                //       between damage attempts?
-                Multipliers.Clear();
-                return finalDamage;
-            }
-        }
+        public float FinalDamageAmount => m_RawDamage * HitboxMultiplier * HurtboxMultiplier;
 
         public DamageAttempt(GameObject source, float damageAmount)
         {
             Source = source;
             m_RawDamage = damageAmount;
-            Multipliers = new List<float>();
+        }
+
+        public void SetMultiplier(Hitbox hitbox)
+        {
+            if (Time.frameCount == m_FrameHitboxSet)
+            {
+                Debug.LogWarning($"[{Time.frameCount}] Setting hitbox multiplier twice on same frame -- " +
+                    $"old value of {HitboxMultiplier} will be over-written with {hitbox.DamageMultiplier}");
+            }
+
+            m_FrameHitboxSet = Time.frameCount;
+            HitboxMultiplier = hitbox.DamageMultiplier;
+        }
+
+        public void SetMultiplier(Hurtbox hurtbox)
+        {
+            if (Time.frameCount == m_FrameHurtboxSet)
+            {
+                Debug.LogWarning($"[{Time.frameCount}] Setting hitbox multiplier twice on same frame -- " +
+                    $"old value of {HurtboxMultiplier} will be over-written with {hurtbox.DamageMultiplier}");
+            }
+
+            m_FrameHurtboxSet = Time.frameCount;
+            HurtboxMultiplier = hurtbox.DamageMultiplier;
         }
     }
 

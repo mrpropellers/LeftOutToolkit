@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityAtoms.BaseAtoms;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 namespace LeftOut.Atoms
@@ -12,9 +13,11 @@ namespace LeftOut.Atoms
         [System.Serializable]
         class EventClipBinding
         {
-            int ClipIndex = 0;
+            int m_FrameLastFired = int.MinValue;
+            int m_ClipIndex = 0;
             public VoidEvent Event;
-            public AudioSource AudioSource;
+            [FormerlySerializedAs("AudioSource")]
+            public AudioSource Source;
             public AudioClip[] AudioClips;
             [Range(0f, 2f)]
             public float BaseVolume = 1f;
@@ -24,20 +27,35 @@ namespace LeftOut.Atoms
             public float BasePitch = 1f;
             [Range(0f, 2.0f)]
             public float PitchVariance;
+            // Affects how frequently this audio event is allowed to fire
+            [Range(0, 60)]
+            public int CooldownFrames = 1;
 
-            public AudioClip NextClip
+            public bool IsInCooldown => m_FrameLastFired + CooldownFrames > Time.frameCount;
+
+            AudioClip NextClip
             {
                 get
                 {
-                    var clip = AudioClips[ClipIndex];
-                    ClipIndex++;
-                    if (ClipIndex >= AudioClips.Length)
+                    var clip = AudioClips[m_ClipIndex];
+                    m_ClipIndex++;
+                    if (m_ClipIndex >= AudioClips.Length)
                     {
-                        ClipIndex = 0;
+                        m_ClipIndex = 0;
                     }
 
                     return clip;
                 }
+            }
+
+            public void Fire()
+            {
+                Debug.Assert(Source != null);
+                Source.pitch =
+                    BasePitch + Random.Range(-PitchVariance, PitchVariance);
+                Source.PlayOneShot(NextClip,
+                    BaseVolume + Random.Range(-VolumeVariance, VolumeVariance));
+                m_FrameLastFired = Time.frameCount;
             }
         }
 
@@ -66,12 +84,9 @@ namespace LeftOut.Atoms
 
         void PlayClip(int bindingIndex)
         {
-            var binding = m_Bindings[bindingIndex];
-            // >>> TODO: Handle pitch/volume variance
-            binding.AudioSource.pitch =
-                binding.BasePitch + Random.Range(-binding.PitchVariance, binding.PitchVariance);
-            binding.AudioSource.PlayOneShot(binding.NextClip,
-                binding.BaseVolume + Random.Range(-binding.VolumeVariance, binding.VolumeVariance));
+            if (m_Bindings[bindingIndex].IsInCooldown) return;
+
+            m_Bindings[bindingIndex].Fire();
         }
     }
 }
