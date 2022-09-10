@@ -3,12 +3,12 @@ using UnityEngine;
 
 namespace LeftOut.JamAids
 {
-    public class ForwardProviderSideView : MonoBehaviour
+    public class SpriteForwardProvider : MonoBehaviour, IForwardProvider
     {
         [SerializeField]
         SpriteRenderer m_Renderer;
 
-        public Vector2 Forward
+        public Vector2 Forward2D
         {
             get
             {
@@ -19,6 +19,8 @@ namespace LeftOut.JamAids
                 return spriteForward;
             }
         }
+
+        public Vector3 Forward => Forward2D;
 
         void OnValidate()
         {

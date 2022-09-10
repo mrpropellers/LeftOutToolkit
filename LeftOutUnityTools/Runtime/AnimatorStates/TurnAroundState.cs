@@ -19,7 +19,7 @@ namespace LeftOut
             //     m_AllColliders[i].enabled = false;
             // }
 
-            animator.transform.DOBlendableRotateBy(Vector3.up * 180f, stateInfo.length).SetEase(Ease.InOutQuad);
+            animator.transform.DOBlendableRotateBy(Vector3.up * 180f, stateInfo.length).SetRelative().SetEase(Ease.InOutQuad);
         }
 
         public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)

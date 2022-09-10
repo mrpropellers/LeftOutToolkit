@@ -23,6 +23,7 @@ namespace LeftOut
 
         public int CurrentDamage => Mathf.FloorToInt(DamageAmount * DamageMultiplier);
 
+        [field: SerializeField]
         public bool IsOn { get; private set; }
 
         void Awake()
