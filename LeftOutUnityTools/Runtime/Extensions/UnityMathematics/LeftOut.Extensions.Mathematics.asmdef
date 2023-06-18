@@ -1,0 +1,24 @@
+{
+    "name": "LeftOut.Extensions.Mathematics",
+    "rootNamespace": "Unity.Mathematics",
+    "references": [
+        "GUID:d8b63aba1907145bea998dd612889d6b"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "USING_UNITY_MATHEMATICS"
+    ],
+    "versionDefines": [
+        {
+            "name": "com.unity.mathematics",
+            "expression": "0",
+            "define": "USING_UNITY_MATHEMATICS"
+        }
+    ],
+    "noEngineReferences": false
+}
