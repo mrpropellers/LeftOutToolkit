@@ -13,8 +13,16 @@
     "allowUnsafeCode": false,
     "overrideReferences": false,
     "precompiledReferences": [],
-    "autoReferenced": true,
-    "defineConstraints": [],
-    "versionDefines": [],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "USE_ATOMS"
+    ],
+    "versionDefines": [
+        {
+            "name": "com.unity-atoms.unity-atoms-core",
+            "expression": "0",
+            "define": "USE_ATOMS"
+        }
+    ],
     "noEngineReferences": false
 }

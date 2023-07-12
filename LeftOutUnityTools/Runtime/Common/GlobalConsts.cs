@@ -6,9 +6,12 @@ namespace LeftOut.GlobalConsts
     {
         // TODO: Make this renderer agnostic with pre-processor defines
         public const string MainColor = "_BaseColor";
-        public static int MainColorId = Shader.PropertyToID(MainColor);
         public const string EmissiveColor = "_EmissionColor";
+        const string k_MainTexture = "_MainTex";
+        
+        public static int MainColorId = Shader.PropertyToID(MainColor);
         public static int EmissiveColorId = Shader.PropertyToID(EmissiveColor);
+        public static int MainTextureId = Shader.PropertyToID(k_MainTexture);
     }
 
     public static class Tags
